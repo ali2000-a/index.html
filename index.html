@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة نتيجة الإعفاء النهائية - Ali SAJAD</title>
+    <title>حاسبة الطالب الشاملة - Ali SAJAD</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 900px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        /* تصميم أزرار التنقل */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; max-width: 900px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; background: #ddd; font-weight: bold; font-size: 16px; transition: 0.3s; color: #555; }
+        .tab-btn.active { background: #27ae60; color: white; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 900px; display: none; }
+        .card.active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         h2 { color: #2c3e50; text-align: center; border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background: #27ae60; color: white; }
         input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        button { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        button.action-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
         .calc-btn { background: #27ae60; color: white; }
         .reset-btn { background: #95a5a6; color: white; }
-        #finalResult { margin-top: 20px; padding: 20px; border-radius: 10px; text-align: center; font-size: 20px; display: none; }
+        
+        #finalResult, #termResult { margin-top: 20px; padding: 20px; border-radius: 10px; text-align: center; font-size: 20px; display: none; }
         .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
         .fail { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
         .footer { text-align: center; margin-top: 30px; font-weight: bold; color: #555; border-top: 1px solid #eee; padding-top: 15px; }
@@ -25,44 +37,66 @@
 </head>
 <body>
 
-<div class="card">
-    <h2>📝 حاسبة التحقق من الإعفاء العام (10 مواد)</h2>
-    <p style="text-align: center; color: #666;">أدخل درجاتك النهائية لحساب حالة الإعفاء:</p>
-    
-    <div class="table-container">
-        <table id="gradesTable">
-            <thead>
-                <tr>
-                    <th>المادة</th>
-                    <th>فصل 1</th>
-                    <th>نصف سنة</th>
-                    <th>فصل 2</th>
-                    <th>السعي السنوي</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('efaTab', this)">حاسبة الإعفاء</button>
+        <button class="tab-btn" onclick="switchTab('termTab', this)">معدل الفصل الأول</button>
     </div>
 
-    <div class="btn-group">
-        <button class="calc-btn" onclick="checkExemption()">احسب النتيجة النهائية</button>
-        <button class="reset-btn" onclick="resetAll()">مسح الكل</button>
+    <div id="efaTab" class="card active">
+        <h2>📝 حاسبة التحقق من الإعفاء العام (10 مواد)</h2>
+        <p style="text-align: center; color: #666;">أدخل درجاتك النهائية لحساب حالة الإعفاء:</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>فصل 1</th>
+                        <th>نصف سنة</th>
+                        <th>فصل 2</th>
+                        <th>السعي السنوي</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div class="btn-group">
+            <button class="action-btn calc-btn" onclick="checkExemption()">احسب النتيجة النهائية</button>
+            <button class="action-btn reset-btn" onclick="resetAll()">مسح الكل</button>
+        </div>
+        <div id="finalResult"></div>
+        <div class="footer">تم تطويره من قبل <span style="color: #27ae60;">Ali SAJAD</span></div>
     </div>
 
-    <div id="finalResult"></div>
-
-    <div class="footer">
-        تم تطويره من قبل <span style="color: #27ae60;">Ali SAJAD</span>
+    <div id="termTab" class="card">
+        <h2>📊 حاسبة معدل الفصل الأول (8 مواد)</h2>
+        <p style="text-align: center; color: #666;">أدخل سعي الفصل الأول لكل مادة:</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>درجة الفصل الأول</th>
+                    </tr>
+                </thead>
+                <tbody id="termTableBody"></tbody>
+            </table>
+        </div>
+        <div class="btn-group">
+            <button class="action-btn calc-btn" onclick="calculateTermAverage()">احسب المعدل</button>
+            <button class="action-btn reset-btn" onclick="resetTerm()">مسح</button>
+        </div>
+        <div id="termResult"></div>
+        <div class="footer">تم تطويره من قبل <span style="color: #27ae60;">Ali SAJAD</span></div>
     </div>
-</div>
 
 <script>
-    // قائمة المواد الـ 10 المطلوبة
-    const subjects = ["إسلامية", "عربي", "إنجليزي", "رياضيات", "كيمياء", "فيزياء", "أحياء", "حاسوب", "رياضة", "فنية"];
+    const subjectsEfa = ["إسلامية", "عربي", "إنجليزي", "رياضيات", "كيمياء", "فيزياء", "أحياء", "حاسوب", "رياضة", "فنية"];
+    const subjectsTerm = ["عربي", "اسلامية", "رياضيات", "انكليزي", "حاسوب", "فيزياء", "كيمياء", "احياء"];
 
-    function initTable() {
+    function initTables() {
+        // جدول الإعفاء
         const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = subjects.map((s, i) => `
+        tbody.innerHTML = subjectsEfa.map((s, i) => `
             <tr>
                 <td>${s}</td>
                 <td><input type="number" id="f1-${i}" min="0" max="100"></td>
@@ -71,51 +105,70 @@
                 <td id="saei-${i}" style="font-weight:bold; background:#f9f9f9;">-</td>
             </tr>
         `).join('');
+
+        // جدول الفصل الأول
+        const tTermBody = document.getElementById('termTableBody');
+        tTermBody.innerHTML = subjectsTerm.map((s, i) => `
+            <tr>
+                <td>${s}</td>
+                <td><input type="number" class="term-input" min="0" max="100"></td>
+            </tr>
+        `).join('');
+    }
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
     }
 
     function checkExemption() {
         let totalSaei = 0;
         let minSaei = 100;
-
-        for(let i=0; i<subjects.length; i++) {
+        for(let i=0; i<subjectsEfa.length; i++) {
             let f1 = parseFloat(document.getElementById(`f1-${i}`).value) || 0;
             let mid = parseFloat(document.getElementById(`mid-${i}`).value) || 0;
             let f2 = parseFloat(document.getElementById(`f2-${i}`).value) || 0;
-
-            // حساب السعي السنوي (المتوسط الحسابي للدرجات الثلاث)
             let saei = Math.round((f1 + mid + f2) / 3);
             document.getElementById(`saei-${i}`).innerText = saei;
-
             totalSaei += saei;
             if(saei < minSaei) minSaei = saei;
         }
-
-        let average = (totalSaei / subjects.length).toFixed(1);
+        let average = (totalSaei / subjectsEfa.length).toFixed(1);
         const resultDiv = document.getElementById('finalResult');
         resultDiv.style.display = 'block';
-
-        // الشروط العراقية: معدل عام 85 فأعلى، وأقل سعي لا يقل عن 75
         if (average >= 85 && minSaei >= 75) {
             resultDiv.className = 'success';
             resultDiv.innerHTML = `🥳 مبروك! معدلك العام هو <b>${average}</b><br>لقد شملك الإعفاء العام!`;
-        } else if (average >= 85 && minSaei < 75) {
-            resultDiv.className = 'fail';
-            resultDiv.innerHTML = `معدلك العام <b>${average}</b> ممتاز، ولكن لديك مادة درجتها (<b>${minSaei}</b>) أقل من 75، وهذا يمنع الإعفاء العام.`;
         } else {
             resultDiv.className = 'fail';
-            resultDiv.innerHTML = `معدلك العام هو <b>${average}</b>.<br>للأسف لا يشملك الإعفاء العام (يجب أن يكون 85 فأكثر).`;
+            resultDiv.innerHTML = `معدلك العام هو <b>${average}</b>. السعي الأقل: <b>${minSaei}</b><br>لا يشملك الإعفاء العام (المعدل المطلوب 85 والأقل 75).`;
         }
     }
 
-    function resetAll() {
-        initTable();
-        document.getElementById('finalResult').style.display = 'none';
+    function calculateTermAverage() {
+        let inputs = document.querySelectorAll('.term-input');
+        let total = 0, count = 0;
+        inputs.forEach(input => {
+            let val = parseFloat(input.value);
+            if (!isNaN(val)) { total += val; count++; }
+        });
+        const resDiv = document.getElementById('termResult');
+        resDiv.style.display = 'block';
+        if (count === subjectsTerm.length) {
+            resDiv.className = 'success';
+            resDiv.innerHTML = `معدلك للفصل الأول هو: <b>${(total / count).toFixed(2)}</b>`;
+        } else {
+            resDiv.className = 'fail';
+            resDiv.innerHTML = "يرجى إدخال جميع الدرجات (8 مواد)";
+        }
     }
 
-    // بناء الجدول عند التشغيل
-    initTable();
-</script>
+    function resetAll() { initTables(); document.getElementById('finalResult').style.display = 'none'; }
+    function resetTerm() { initTables(); document.getElementById('termResult').style.display = 'none'; }
 
+    initTables();
+</script>
 </body>
 </html>
-
