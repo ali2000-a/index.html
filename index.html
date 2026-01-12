@@ -3,496 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ط­ط§ط³ط¨ط© ط§ظ„ط·ط§ظ„ط¨ ط§ظ„ط´ط§ظ…ظ„ط© - Ali SAJAD</title>
+    <title>حاسبة الطالب الشاملة - Ali SAJAD</title>
     <style>
-        :root {
-            --bg: #f4f7f6;
-            --card: #ffffff;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --border: #e5e7eb;
-            --primary: #27ae60;
-            --primary-2: #1e9a53;
-            --shadow: 0 12px 28px rgba(0, 0, 0, 0.10);
-            --radius: 16px;
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; max-width: 900px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; background: #ddd; font-weight: bold; font-size: 16px; transition: 0.3s; color: #555; }
+        .tab-btn.active { background: #27ae60; color: white; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
 
-        * { box-sizing: border-box; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 900px; display: none; }
+        .card.active { display: block; animation: fadeIn 0.5s; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: radial-gradient(1200px 600px at 80% -10%, rgba(39, 174, 96, 0.18), transparent 60%),
-                        radial-gradient(900px 500px at 10% 0%, rgba(17, 94, 89, 0.10), transparent 55%),
-                        var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 22px;
-            margin: 0;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .app {
-            width: 100%;
-            max-width: 980px;
-        }
+        h2 { color: #2c3e50; text-align: center; border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background: #27ae60; color: white; }
+        input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        
+        /* تمييز المواد الاختيارية */
+        .optional-row { background-color: #f9f9f9; color: #666; }
+        .optional-tag { font-size: 10px; color: #e67e22; display: block; }
 
-        .header {
-            background: linear-gradient(135deg, rgba(39, 174, 96, 0.14), rgba(39, 174, 96, 0.06));
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px 18px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 22px;
-            line-height: 1.4;
-            text-align: center;
-        }
-
-        .header p {
-            margin: 8px 0 0;
-            text-align: center;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        /* طھطµظ…ظٹظ… ط£ط²ط±ط§ط± ط§ظ„طھظ†ظ‚ظ„ */
-        .tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 14px;
-            width: 100%;
-        }
-
-        .tab-btn {
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.75);
-            font-weight: 800;
-            font-size: 15px;
-            transition: 0.2s;
-            color: #374151;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
-        }
-
-        .tab-btn:hover { transform: translateY(-1px); }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-2));
-            color: white;
-            border-color: rgba(39, 174, 96, 0.3);
-            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.28);
-        }
-
-        .card {
-            background: var(--card);
-            padding: 18px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            width: 100%;
-            display: none;
-            border: 1px solid var(--border);
-        }
-
-        .card.active {
-            display: block;
-            animation: fadeIn 0.35s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            color: #111827;
-            text-align: center;
-            border-bottom: 3px solid rgba(39, 174, 96, 0.55);
-            padding-bottom: 10px;
-            margin: 0 0 8px;
-            font-size: 18px;
-        }
-
-        .subtext {
-            text-align: center;
-            color: var(--muted);
-            margin: 0 0 10px;
-            font-size: 14px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 720px;
-        }
-
-        table.is-compact {
-            min-width: 420px;
-        }
-
-        th, td {
-            border-bottom: 1px solid var(--border);
-            padding: 10px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        th {
-            background: linear-gradient(135deg, var(--primary), var(--primary-2));
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-            font-size: 13px;
-        }
-
-        tr:last-child td { border-bottom: none; }
-
-        tr.is-disabled {
-            opacity: 0.55;
-            background: #fafafa;
-        }
-
-        .subject-cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 700;
-        }
-
-        .opt-badge {
-            font-size: 12px;
-            color: #0f766e;
-            background: rgba(15, 118, 110, 0.10);
-            border: 1px solid rgba(15, 118, 110, 0.20);
-            padding: 4px 8px;
-            border-radius: 999px;
-        }
-
-        input[type="number"] {
-            width: 74px;
-            padding: 8px 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            text-align: center;
-            outline: none;
-            background: white;
-            transition: 0.15s;
-        }
-
-        input[type="number"]:focus {
-            border-color: rgba(39, 174, 96, 0.7);
-            box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.12);
-        }
-
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-        }
-
-        .saei-cell {
-            font-weight: 900;
-            background: #fafafa;
-            color: #111827;
-        }
-
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 14px;
-        }
-
-        button.action-btn {
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 900;
-            transition: 0.2s;
-        }
-
-        button.action-btn:hover { transform: translateY(-1px); }
-
-        .calc-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-2));
-            color: white;
-            box-shadow: 0 12px 22px rgba(39, 174, 96, 0.25);
-        }
-
-        .reset-btn {
-            background: #111827;
-            color: white;
-            box-shadow: 0 12px 22px rgba(17, 24, 39, 0.18);
-        }
-
-        #finalResult, #termResult {
-            margin-top: 14px;
-            padding: 14px;
-            border-radius: 14px;
-            text-align: center;
-            font-size: 16px;
-            display: none;
-            border: 1px solid transparent;
-        }
-
-        .success {
-            background: rgba(34, 197, 94, 0.10);
-            color: #14532d;
-            border-color: rgba(34, 197, 94, 0.25);
-        }
-
-        .fail {
-            background: rgba(239, 68, 68, 0.10);
-            color: #7f1d1d;
-            border-color: rgba(239, 68, 68, 0.25);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 18px;
-            font-weight: 800;
-            color: #6b7280;
-            border-top: 1px solid var(--border);
-            padding-top: 12px;
-            font-size: 14px;
-        }
-
-        @media (max-width: 640px) {
-            body { padding: 14px; }
-            .tabs { grid-template-columns: 1fr; }
-            .btn-group { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 820px) {
-            .table-container { overflow-x: visible; }
-            table { min-width: 0; }
-
-            table.responsive-table thead { display: none; }
-            table.responsive-table,
-            table.responsive-table tbody,
-            table.responsive-table tr,
-            table.responsive-table td {
-                display: block;
-                width: 100%;
-            }
-
-            table.responsive-table tr {
-                border-bottom: 1px solid var(--border);
-                padding: 12px;
-            }
-
-            table.responsive-table tr:last-child { border-bottom: none; }
-
-            table.responsive-table td {
-                border-bottom: none;
-                padding: 8px 0;
-            }
-
-            table.responsive-table td[data-label] {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-            }
-
-            table.responsive-table td[data-label]::before {
-                content: attr(data-label);
-                font-weight: 900;
-                color: var(--muted);
-                white-space: nowrap;
-            }
-
-            table.responsive-table input[type="number"] {
-                width: 120px;
-            }
-
-            table.responsive-table .subject-cell {
-                justify-content: flex-start;
-            }
-        }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        button.action-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .calc-btn { background: #27ae60; color: white; }
+        .reset-btn { background: #95a5a6; color: white; }
+        
+        #finalResult, #termResult { margin-top: 20px; padding: 20px; border-radius: 10px; text-align: center; font-size: 20px; display: none; }
+        .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+        .footer { text-align: center; margin-top: 30px; font-weight: bold; color: #555; border-top: 1px solid #eee; padding-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="app">
-        <div class="header">
-            <h1>ط­ط§ط³ط¨ط© ط§ظ„ط·ط§ظ„ط¨ ط§ظ„ط´ط§ظ…ظ„ط©</h1>
-            <p>ط£ط¯ط®ظ„ ط¯ط±ط¬ط§طھظƒ ظˆط§ط­ط³ط¨ ط§ظ„ط¥ط¹ظپط§ط، ظˆط§ظ„ظ…ط¹ط¯ظ„ ط¨ط³ظ‡ظˆظ„ط©. (ظ…ظˆط§ط¯ ط§ط®طھظٹط§ط±ظٹط©: ط­ط§ط³ظˆط¨طŒ ط§ط¬طھظ…ط§ط¹ظٹط§طھطŒ ظƒط±ط¯ظٹطŒ ظپط±ظ†ط³ظٹطŒ ط±ظٹط§ط¶ط©طŒ ظپظ†ظٹط©)</p>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('efaTab', this)">حاسبة الإعفاء</button>
+        <button class="tab-btn" onclick="switchTab('termTab', this)">معدل الفصل الأول</button>
+    </div>
+
+    <div id="efaTab" class="card active">
+        <h2>📝 حاسبة الإعفاء العام</h2>
+        <p style="text-align: center; color: #666;">اترك المواد التي لم تدرسوها فارغة:</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>فصل 1</th>
+                        <th>نصف سنة</th>
+                        <th>فصل 2</th>
+                        <th>السعي السنوي</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
         </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('efaTab', this)">ط­ط§ط³ط¨ط© ط§ظ„ط¥ط¹ظپط§ط،</button>
-            <button class="tab-btn" onclick="switchTab('termTab', this)">ظ…ط¹ط¯ظ„ ط§ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„</button>
+        <div class="btn-group">
+            <button class="action-btn calc-btn" onclick="checkExemption()">احسب النتيجة النهائية</button>
+            <button class="action-btn reset-btn" onclick="resetAll()">مسح الكل</button>
         </div>
+        <div id="finalResult"></div>
+        <div class="footer">تم تطويره من قبل <span style="color: #27ae60;">Ali SAJAD</span></div>
+    </div>
 
-        <div id="efaTab" class="card active">
-            <h2>ط­ط§ط³ط¨ط© ط§ظ„طھط­ظ‚ظ‚ ظ…ظ† ط§ظ„ط¥ط¹ظپط§ط، ط§ظ„ط¹ط§ظ…</h2>
-
-            <p class="subtext">ظپط¹ظ‘ظ„/ط£ظ„ط؛ظگ ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ط§ط®طھظٹط§ط±ظٹط© ط«ظ… ط£ط¯ط®ظ„ ط§ظ„ط¯ط±ط¬ط§طھ ظ„ط­ط³ط§ط¨ ط§ظ„ط³ط¹ظٹ ط§ظ„ط³ظ†ظˆظٹ ظˆط§ظ„ظ…ط¹ط¯ظ„.</p>
-
-            <div class="table-container">
-                <table class="responsive-table">
-                    <thead>
-                        <tr>
-                            <th>طھظپط¹ظٹظ„</th>
-                            <th>ط§ظ„ظ…ط§ط¯ط©</th>
-                            <th>ظپطµظ„ 1</th>
-                            <th>ظ†طµظپ ط³ظ†ط©</th>
-                            <th>ظپطµظ„ 2</th>
-                            <th>ط§ظ„ط³ط¹ظٹ ط§ظ„ط³ظ†ظˆظٹ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>
-
-            <div class="btn-group">
-                <button class="action-btn calc-btn" onclick="checkExemption()">ط§ط­ط³ط¨ ط§ظ„ظ†طھظٹط¬ط© ط§ظ„ظ†ظ‡ط§ط¦ظٹط©</button>
-                <button class="action-btn reset-btn" onclick="resetAll()">ظ…ط³ط­ ط§ظ„ظƒظ„</button>
-            </div>
-            <div id="finalResult"></div>
-            <div class="footer">طھظ… طھط·ظˆظٹط±ظ‡ ظ…ظ† ظ‚ط¨ظ„ <span style="color: var(--primary);">Ali SAJAD</span></div>
+    <div id="termTab" class="card">
+        <h2>📊 حاسبة معدل الفصل الأول</h2>
+        <p style="text-align: center; color: #666;">اترك المواد التي لم تدرسوها فارغة:</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>درجة الفصل الأول</th>
+                    </tr>
+                </thead>
+                <tbody id="termTableBody"></tbody>
+            </table>
         </div>
-
-        <div id="termTab" class="card">
-            <h2>ط­ط§ط³ط¨ط© ظ…ط¹ط¯ظ„ ط§ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„</h2>
-            <p class="subtext">ط£ط¯ط®ظ„ ط³ط¹ظٹ ط§ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„ ظ„ظ„ظ…ظˆط§ط¯ ط§ظ„ظ…ظپط¹ظ‘ظ„ط©. ظٹظ…ظƒظ†ظƒ ط¥ظ„ط؛ط§ط، ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ط§ط®طھظٹط§ط±ظٹط© (ط­ط§ط³ظˆط¨/ط§ط¬طھظ…ط§ط¹ظٹط§طھ/ظƒط±ط¯ظٹ/ظپط±ظ†ط³ظٹ/ط±ظٹط§ط¶ط©/ظپظ†ظٹط©).</p>
-
-            <div class="table-container">
-                <table class="responsive-table">
-                    <thead>
-                        <tr>
-                            <th>طھظپط¹ظٹظ„</th>
-                            <th>ط§ظ„ظ…ط§ط¯ط©</th>
-                            <th>ط¯ط±ط¬ط© ط§ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„</th>
-                        </tr>
-                    </thead>
-                    <tbody id="termTableBody"></tbody>
-                </table>
-            </div>
-
-            <div class="btn-group">
-                <button class="action-btn calc-btn" onclick="calculateTermAverage()">ط§ط­ط³ط¨ ط§ظ„ظ…ط¹ط¯ظ„</button>
-                <button class="action-btn reset-btn" onclick="resetTerm()">ظ…ط³ط­</button>
-            </div>
-            <div id="termResult"></div>
-            <div class="footer">طھظ… طھط·ظˆظٹط±ظ‡ ظ…ظ† ظ‚ط¨ظ„ <span style="color: var(--primary);">Ali SAJAD</span></div>
+        <div class="btn-group">
+            <button class="action-btn calc-btn" onclick="calculateTermAverage()">احسب المعدل</button>
+            <button class="action-btn reset-btn" onclick="resetTerm()">مسح</button>
         </div>
+        <div id="termResult"></div>
+        <div class="footer">تم تطويره من قبل <span style="color: #27ae60;">Ali SAJAD</span></div>
     </div>
 
 <script>
-    const subjectsEfa = [
-        { name: "ط¥ط³ظ„ط§ظ…ظٹط©", optional: false },
-        { name: "ط¹ط±ط¨ظٹ", optional: false },
-        { name: "ط¥ظ†ط¬ظ„ظٹط²ظٹ", optional: false },
-        { name: "ط±ظٹط§ط¶ظٹط§طھ", optional: false },
-        { name: "ظƒظٹظ…ظٹط§ط،", optional: false },
-        { name: "ظپظٹط²ظٹط§ط،", optional: false },
-        { name: "ط£ط­ظٹط§ط،", optional: false },
-        { name: "ط­ط§ط³ظˆط¨", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ط§ط¬طھظ…ط§ط¹ظٹط§طھ", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ظƒط±ط¯ظٹ", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ظپط±ظ†ط³ظٹ", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ط±ظٹط§ط¶ط©", optional: true, enabled: false, defaultEnabled: false },
-        { name: "ظپظ†ظٹط©", optional: true, enabled: false, defaultEnabled: false },
-    ];
-
-    const subjectsTerm = [
-        { name: "ط¹ط±ط¨ظٹ", optional: false },
-        { name: "ط§ط³ظ„ط§ظ…ظٹط©", optional: false },
-        { name: "ط±ظٹط§ط¶ظٹط§طھ", optional: false },
-        { name: "ط§ظ†ظƒظ„ظٹط²ظٹ", optional: false },
-        { name: "ط­ط§ط³ظˆط¨", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ظپظٹط²ظٹط§ط،", optional: false },
-        { name: "ظƒظٹظ…ظٹط§ط،", optional: false },
-        { name: "ط§ط­ظٹط§ط،", optional: false },
-        { name: "ط§ط¬طھظ…ط§ط¹ظٹط§طھ", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ظƒط±ط¯ظٹ", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ظپط±ظ†ط³ظٹ", optional: true, enabled: true, defaultEnabled: true },
-        { name: "ط±ظٹط§ط¶ط©", optional: true, enabled: false, defaultEnabled: false },
-        { name: "ظپظ†ظٹط©", optional: true, enabled: false, defaultEnabled: false },
+    // المواد الأساسية والاختيارية المدمجة
+    const allSubjects = [
+        { name: "إسلامية", optional: false },
+        { name: "عربي", optional: false },
+        { name: "إنجليزي", optional: false },
+        { name: "رياضيات", optional: false },
+        { name: "كيمياء", optional: false },
+        { name: "فيزياء", optional: false },
+        { name: "أحياء", optional: false },
+        { name: "اجتماعيات", optional: true },
+        { name: "حاسوب", optional: true },
+        { name: "فنية", optional: true },
+        { name: "رياضة", optional: true },
+        { name: "كردية", optional: true },
+        { name: "فرنسية", optional: true }
     ];
 
     function initTables() {
-        // ط¬ط¯ظˆظ„ ط§ظ„ط¥ط¹ظپط§ط،
+        // جدول الإعفاء
         const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = subjectsEfa.map((subj, i) => {
-            const enabled = subj.optional ? !!subj.enabled : true;
-            return `
-                <tr id="efa-row-${i}" class="${enabled ? '' : 'is-disabled'}">
-                    <td data-label="طھظپط¹ظٹظ„">
-                        ${subj.optional
-                            ? `<input type="checkbox" id="efa-opt-${i}" ${enabled ? 'checked' : ''} onchange="toggleSubject('efa', ${i})">`
-                            : `<span style="font-weight:900; color: var(--primary);">âœ“</span>`
-                        }
-                    </td>
-                    <td data-label="ط§ظ„ظ…ط§ط¯ط©">
-                        <div class="subject-cell">
-                            <span>${subj.name}</span>
-                            ${subj.optional ? `<span class="opt-badge">ط§ط®طھظٹط§ط±ظٹ</span>` : ``}
-                        </div>
-                    </td>
-                    <td data-label="ظپطµظ„ 1"><input type="number" id="f1-${i}" min="0" max="100" step="1" ${enabled ? '' : 'disabled'}></td>
-                    <td data-label="ظ†طµظپ ط³ظ†ط©"><input type="number" id="mid-${i}" min="0" max="100" step="1" ${enabled ? '' : 'disabled'}></td>
-                    <td data-label="ظپطµظ„ 2"><input type="number" id="f2-${i}" min="0" max="100" step="1" ${enabled ? '' : 'disabled'}></td>
-                    <td data-label="ط§ظ„ط³ط¹ظٹ ط§ظ„ط³ظ†ظˆظٹ" id="saei-${i}" class="saei-cell">-</td>
-                </tr>
-            `;
-        }).join('');
+        tbody.innerHTML = allSubjects.map((s, i) => `
+            <tr class="${s.optional ? 'optional-row' : ''}">
+                <td>${s.name} ${s.optional ? '<span class="optional-tag">(اختياري)</span>' : ''}</td>
+                <td><input type="number" id="f1-${i}" min="0" max="100"></td>
+                <td><input type="number" id="mid-${i}" min="0" max="100"></td>
+                <td><input type="number" id="f2-${i}" min="0" max="100"></td>
+                <td id="saei-${i}" style="font-weight:bold; background:#f9f9f9;">-</td>
+            </tr>
+        `).join('');
 
-        // ط¬ط¯ظˆظ„ ط§ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„
+        // جدول الفصل الأول
         const tTermBody = document.getElementById('termTableBody');
-        tTermBody.innerHTML = subjectsTerm.map((subj, i) => {
-            const enabled = subj.optional ? !!subj.enabled : true;
-            return `
-                <tr id="term-row-${i}" class="${enabled ? '' : 'is-disabled'}">
-                    <td data-label="طھظپط¹ظٹظ„">
-                        ${subj.optional
-                            ? `<input type="checkbox" id="term-opt-${i}" ${enabled ? 'checked' : ''} onchange="toggleSubject('term', ${i})">`
-                            : `<span style="font-weight:900; color: var(--primary);">âœ“</span>`
-                        }
-                    </td>
-                    <td data-label="ط§ظ„ظ…ط§ط¯ط©">
-                        <div class="subject-cell">
-                            <span>${subj.name}</span>
-                            ${subj.optional ? `<span class="opt-badge">ط§ط®طھظٹط§ط±ظٹ</span>` : ``}
-                        </div>
-                    </td>
-                    <td data-label="ط¯ط±ط¬ط© ط§ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„"><input type="number" class="term-input" data-term-index="${i}" min="0" max="100" step="1" ${enabled ? '' : 'disabled'}></td>
-                </tr>
-            `;
-        }).join('');
-
-        clearResults();
-    }
-
-    function clearResults() {
-        const finalResult = document.getElementById('finalResult');
-        finalResult.style.display = 'none';
-        finalResult.className = '';
-        finalResult.innerHTML = '';
-
-        const termResult = document.getElementById('termResult');
-        termResult.style.display = 'none';
-        termResult.className = '';
-        termResult.innerHTML = '';
+        tTermBody.innerHTML = allSubjects.map((s, i) => `
+            <tr class="${s.optional ? 'optional-row' : ''}">
+                <td>${s.name} ${s.optional ? '<span class="optional-tag">(اختياري)</span>' : ''}</td>
+                <td><input type="number" class="term-input" id="t-${i}" min="0" max="100"></td>
+            </tr>
+        `).join('');
     }
 
     function switchTab(tabId, btn) {
@@ -502,150 +140,76 @@
         btn.classList.add('active');
     }
 
-    function toggleSubject(which, index) {
-        if (which === 'efa') {
-            const subj = subjectsEfa[index];
-            if (!subj.optional) return;
-
-            const checked = document.getElementById(`efa-opt-${index}`).checked;
-            subj.enabled = checked;
-
-            const row = document.getElementById(`efa-row-${index}`);
-            if (row) row.classList.toggle('is-disabled', !checked);
-
-            ['f1', 'mid', 'f2'].forEach(prefix => {
-                const input = document.getElementById(`${prefix}-${index}`);
-                if (!input) return;
-                input.disabled = !checked;
-                if (!checked) input.value = '';
-            });
-
-            const saeiCell = document.getElementById(`saei-${index}`);
-            if (saeiCell) saeiCell.innerText = '-';
-        }
-
-        if (which === 'term') {
-            const subj = subjectsTerm[index];
-            if (!subj.optional) return;
-
-            const checked = document.getElementById(`term-opt-${index}`).checked;
-            subj.enabled = checked;
-
-            const row = document.getElementById(`term-row-${index}`);
-            row.classList.toggle('is-disabled', !checked);
-
-            const input = document.querySelector(`.term-input[data-term-index="${index}"]`);
-            input.disabled = !checked;
-            if (!checked) input.value = '';
-        }
-
-        clearResults();
-    }
-
     function checkExemption() {
         let totalSaei = 0;
-        let minSaei = Infinity;
-        let enabledCount = 0;
+        let minSaei = 100;
+        let count = 0;
 
-        for (let i = 0; i < subjectsEfa.length; i++) {
-            const subj = subjectsEfa[i];
-            const enabled = subj.optional ? !!subj.enabled : true;
+        for(let i=0; i<allSubjects.length; i++) {
+            let f1 = document.getElementById(`f1-${i}`).value;
+            let mid = document.getElementById(`mid-${i}`).value;
+            let f2 = document.getElementById(`f2-${i}`).value;
 
-            if (!enabled) {
-                document.getElementById(`saei-${i}`).innerText = '-';
+            // إذا كانت المادة اختيارية وفارغة، نتخطاها
+            if (allSubjects[i].optional && f1==="" && mid==="" && f2==="") {
+                document.getElementById(`saei-${i}`).innerText = "-";
                 continue;
             }
 
-            let f1 = parseFloat(document.getElementById(`f1-${i}`).value);
-            let mid = parseFloat(document.getElementById(`mid-${i}`).value);
-            let f2 = parseFloat(document.getElementById(`f2-${i}`).value);
+            let v1 = parseFloat(f1) || 0;
+            let v2 = parseFloat(mid) || 0;
+            let v3 = parseFloat(f2) || 0;
 
-            f1 = isNaN(f1) ? 0 : f1;
-            mid = isNaN(mid) ? 0 : mid;
-            f2 = isNaN(f2) ? 0 : f2;
-
-            let saei = Math.round((f1 + mid + f2) / 3);
+            let saei = Math.round((v1 + v2 + v3) / 3);
             document.getElementById(`saei-${i}`).innerText = saei;
 
             totalSaei += saei;
-            enabledCount++;
-            if (saei < minSaei) minSaei = saei;
+            if(saei < minSaei) minSaei = saei;
+            count++;
         }
 
+        if (count === 0) return;
+
+        let average = (totalSaei / count).toFixed(1);
         const resultDiv = document.getElementById('finalResult');
         resultDiv.style.display = 'block';
 
-        if (enabledCount === 0) {
-            resultDiv.className = 'fail';
-            resultDiv.innerHTML = 'ظٹط±ط¬ظ‰ طھظپط¹ظٹظ„ ظ…ط§ط¯ط© ظˆط§ط­ط¯ط© ط¹ظ„ظ‰ ط§ظ„ط£ظ‚ظ„.';
-            return;
-        }
-
-        let average = (totalSaei / enabledCount).toFixed(1);
-
         if (average >= 85 && minSaei >= 75) {
             resultDiv.className = 'success';
-            resultDiv.innerHTML = `ظ…ط¨ط±ظˆظƒ! ظ…ط¹ط¯ظ„ظƒ ط§ظ„ط¹ط§ظ… ظ‡ظˆ <b>${average}</b><br>ط¹ط¯ط¯ ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ظ…ط­طھط³ط¨ط©: <b>${enabledCount}</b><br>ظ„ظ‚ط¯ ط´ظ…ظ„ظƒ ط§ظ„ط¥ط¹ظپط§ط، ط§ظ„ط¹ط§ظ…!`;
+            resultDiv.innerHTML = `🥳 مبروك! معدلك لـ (${count}) مواد هو <b>${average}</b><br>لقد شملك الإعفاء العام!`;
         } else {
             resultDiv.className = 'fail';
-            resultDiv.innerHTML = `ظ…ط¹ط¯ظ„ظƒ ط§ظ„ط¹ط§ظ… ظ‡ظˆ <b>${average}</b><br>ط§ظ„ط³ط¹ظٹ ط§ظ„ط£ظ‚ظ„: <b>${minSaei}</b><br>ط¹ط¯ط¯ ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ظ…ط­طھط³ط¨ط©: <b>${enabledCount}</b><br>ظ„ط§ ظٹط´ظ…ظ„ظƒ ط§ظ„ط¥ط¹ظپط§ط، ط§ظ„ط¹ط§ظ… (ط§ظ„ظ…ط¹ط¯ظ„ ط§ظ„ظ…ط·ظ„ظˆط¨ 85 ظˆط§ظ„ط£ظ‚ظ„ 75).`;
+            resultDiv.innerHTML = `معدلك العام هو <b>${average}</b>. السعي الأقل: <b>${minSaei}</b><br>لا يشملك الإعفاء العام (المعدل المطلوب 85 والأقل 75).`;
         }
     }
 
     function calculateTermAverage() {
-        let total = 0;
-        let enabledCount = 0;
-        let missingCount = 0;
-
-        for (let i = 0; i < subjectsTerm.length; i++) {
-            const subj = subjectsTerm[i];
-            const enabled = subj.optional ? !!subj.enabled : true;
-
-            if (!enabled) continue;
-
-            const input = document.querySelector(`.term-input[data-term-index="${i}"]`);
+        let inputs = document.querySelectorAll('.term-input');
+        let total = 0, count = 0;
+        
+        inputs.forEach(input => {
             let val = parseFloat(input.value);
-
-            enabledCount++;
-            if (isNaN(val)) {
-                missingCount++;
-                continue;
+            if (!isNaN(val)) {
+                total += val;
+                count++;
             }
-
-            total += val;
-        }
+        });
 
         const resDiv = document.getElementById('termResult');
         resDiv.style.display = 'block';
 
-        if (enabledCount === 0) {
-            resDiv.className = 'fail';
-            resDiv.innerHTML = 'ظٹط±ط¬ظ‰ طھظپط¹ظٹظ„ ظ…ط§ط¯ط© ظˆط§ط­ط¯ط© ط¹ظ„ظ‰ ط§ظ„ط£ظ‚ظ„.';
-            return;
-        }
-
-        if (missingCount === 0) {
+        if (count > 0) {
+            let avg = (total / count).toFixed(2);
             resDiv.className = 'success';
-            resDiv.innerHTML = `ظ…ط¹ط¯ظ„ظƒ ظ„ظ„ظپطµظ„ ط§ظ„ط£ظˆظ„ ظ‡ظˆ: <b>${(total / enabledCount).toFixed(2)}</b><br>ط¹ط¯ط¯ ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ظ…ط­طھط³ط¨ط©: <b>${enabledCount}</b>`;
+            resDiv.innerHTML = `معدلك للفصل الأول (بناءً على ${count} مواد) هو: <b>${avg}</b>`;
         } else {
             resDiv.className = 'fail';
-            resDiv.innerHTML = `ظٹط±ط¬ظ‰ ط¥ط¯ط®ط§ظ„ ط¬ظ…ظٹط¹ ط§ظ„ط¯ط±ط¬ط§طھ ظ„ظ„ظ…ظˆط§ط¯ ط§ظ„ظ…ظپط¹ظ‘ظ„ط©.<br>ط§ظ„ظ…ظˆط§ط¯ ط§ظ„ظ…ظپظ‚ظˆط¯ط©: <b>${missingCount}</b> ظ…ظ† <b>${enabledCount}</b>`;
+            resDiv.innerHTML = "يرجى إدخال درجة مادة واحدة على الأقل.";
         }
     }
 
-    function resetAll() {
-        subjectsEfa.forEach(s => {
-            if (s.optional) s.enabled = !!s.defaultEnabled;
-        });
-        initTables();
-    }
-
-    function resetTerm() {
-        subjectsTerm.forEach(s => {
-            if (s.optional) s.enabled = !!s.defaultEnabled;
-        });
-        initTables();
-    }
+    function resetAll() { initTables(); document.getElementById('finalResult').style.display = 'none'; }
+    function resetTerm() { initTables(); document.getElementById('termResult').style.display = 'none'; }
 
     initTables();
 </script>
